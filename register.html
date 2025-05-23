@@ -1,0 +1,23 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Guest Registration</title>
+</head>
+<body>
+  <h1>Register for AI25 Event</h1>
+  <form id="registerForm">
+    <label>Name: <input type="text" id="name" required></label><br><br>
+    <label>Photo: <input type="file" id="photo" accept="image/*" required></label><br><br>
+    <button type="submit">Register</button>
+  </form>
+  <script>
+    document.getElementById("registerForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      alert("Registered successfully! QR code will be sent separately.");
+    });
+  </script>
+</body>
+</html>

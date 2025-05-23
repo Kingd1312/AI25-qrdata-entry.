@@ -1,0 +1,13 @@
+
+[
+  {
+    "name": "John Doe",
+    "photo": "https://via.placeholder.com/150",
+    "qr": "AI25-001"
+  },
+  {
+    "name": "Jane Smith",
+    "photo": "https://via.placeholder.com/150",
+    "qr": "AI25-002"
+  }
+]
