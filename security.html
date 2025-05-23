@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Security Check</title>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    #result img { max-width: 150px; display: block; }
+    .access { font-size: 20px; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h2>Security Scan</h2>
+  <div id="reader" style="width:300px;"></div>
+  <div id="result"></div>
+  <script>
+    function checkGuest(id) {
+      fetch('db.json')
+        .then(res => res.json())
+        .then(data => {
+          const guest = data.find(g => g.id === id);
+          const resultDiv = document.getElementById('result');
+          if (guest) {
+            resultDiv.innerHTML = `<p>Name: ${guest.name}</p><img src="${guest.photo}"><div class='access' style='color:green;'>✅ Access Granted</div>`;
+          } else {
+            resultDiv.innerHTML = `<div class='access' style='color:red;'>❌ Access Denied</div>`;
+          }
+        });
+    }
+    new Html5Qrcode("reader").start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: 250 },
+      qrCodeMessage => {
+        new Html5Qrcode("reader").stop();
+        checkGuest(qrCodeMessage);
+      }
+    );
+  </script>
+</body>
+</html>

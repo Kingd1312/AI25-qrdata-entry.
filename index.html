@@ -2,44 +2,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>AI25 Event Registration</title>
+  <title>Guest Registration</title>
   <style>
-    body { font-family: Arial; text-align: center; padding: 40px; }
-    input, button { margin: 10px; padding: 10px; width: 300px; }
-    img { margin-top: 20px; max-width: 200px; }
+    body { font-family: Arial; margin: 20px; }
+    input, button { margin: 10px 0; padding: 10px; width: 100%; }
   </style>
 </head>
 <body>
-  <h1>Register for AI25 Event</h1>
+  <h2>Register Guest</h2>
   <form id="registerForm">
     <input type="text" id="name" placeholder="Full Name" required><br>
     <input type="file" id="photo" accept="image/*" required><br>
     <button type="submit">Register</button>
   </form>
-  <div id="result"></div>
+  <p id="status"></p>
   <script>
-    const form = document.getElementById('registerForm');
-    form.onsubmit = async function(e) {
+    document.getElementById('registerForm').onsubmit = async function(e) {
       e.preventDefault();
-      const name = document.getElementById('name').value.trim();
+      const name = document.getElementById('name').value;
       const photo = document.getElementById('photo').files[0];
-      if (!name || !photo) return alert("Please fill all fields.");
-
       const reader = new FileReader();
-      reader.onload = function(event) {
-        const imgData = event.target.result;
-        const id = "AI25-" + Date.now();
-        const guestData = { id, name, photo: imgData };
-
-        let guests = JSON.parse(localStorage.getItem("guests") || "[]");
-        guests.push(guestData);
-        localStorage.setItem("guests", JSON.stringify(guests));
-
-        const qrUrl = `verify.html?id=${id}`;
-        document.getElementById("result").innerHTML = `
-          <p>Registration complete. Your QR Code:</p>
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${location.origin + location.pathname.replace('index.html', qrUrl)}">
-          <p><a href="${qrUrl}">Verification Link</a></p>`;
+      reader.onload = function() {
+        const data = {
+          name: name,
+          photo: reader.result,
+          id: Date.now().toString()
+        };
+        fetch('db.json').then(res => res.json()).then(guests => {
+          guests.push(data);
+          const blob = new Blob([JSON.stringify(guests, null, 2)], { type: 'application/json' });
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = "db.json";
+          a.click();
+          document.getElementById('status').textContent = "Guest registered! Download updated db.json and replace it in GitHub.";
+        });
       };
       reader.readAsDataURL(photo);
     };
