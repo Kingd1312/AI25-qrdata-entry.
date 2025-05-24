@@ -1,0 +1,1 @@
+// JS for handling registration and QR generation
