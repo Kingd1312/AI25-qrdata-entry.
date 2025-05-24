@@ -1,0 +1,1 @@
+// JS for displaying guest list in admin page
